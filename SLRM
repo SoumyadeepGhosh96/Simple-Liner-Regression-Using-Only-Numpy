@@ -1,0 +1,107 @@
+from IPython.display import Image
+pic = Image(filename='T-table.png')
+
+def linear_regression(X,Y):
+    
+    import numpy as np
+    
+    # Degrees of Freedom :
+    df = np.subtract(len(X),2)
+    print("The number of df is : {}".format(df))
+    # Calculation of Y Variable :
+    Y_bar = np.mean(Y)
+    y = Y-Y_bar
+    y_squared = np.square(y)
+    var_y = np.sum(y_squared)
+    #print(var_y)
+
+    # Calculation of X Variable :
+
+    X_bar = np.mean(X)
+    x = X-X_bar
+    x_squared = np.square(x)
+    var_x = np.sum(x_squared)
+    #print(var_x)
+
+    # Calculation of cov(x,y) :
+
+    obs_cov = np.sum(np.multiply(x, y))
+    #print(obs_cov)
+
+    # Calculation of beta_coefficient :
+
+    beta_coefficient = obs_cov/var_x
+    print("The value of beta_hat is {}".format(beta_coefficient))
+
+    # Calculation of intercept :
+
+    beta_coefficient_multiply_avgX = np.multiply(beta_coefficient, X_bar)
+    intercept = np.subtract(Y_bar,beta_coefficient_multiply_avgX)
+    print("The value of intercept parameter is {}".format(intercept))
+
+    # Calculation of R-Squared :
+    beta_coefficientsq = np.square(beta_coefficient)
+    beta_coefficientsq_multiply_varx = np.multiply(beta_coefficientsq,var_x)
+    TSS = var_y
+    ESS = beta_coefficientsq_multiply_varx
+    RSS = np.subtract(TSS,ESS)
+    R_Squared = np.divide(ESS,TSS)
+    R_Squared = R_Squared.round(2)
+    print("The value of coefficient of determinatnt is : {}".format(R_Squared))
+
+    # Variance of beta_coefficient :
+
+    var_of_error = np.divide(RSS,df)
+    var_of_error = var_of_error.round(2)
+    var_beta_coefficient = np.divide(var_of_error,var_x)
+    var_beta_coefficient = var_beta_coefficient.round(4)
+    print("The variance of beta_hat is {}".format(var_beta_coefficient))
+
+    # Standart error of beta_coefficient :
+
+    SE_beta_coefficient = np.sqrt(var_beta_coefficient)
+    SE_beta_coefficient = SE_beta_coefficient.round(4)
+    print("The standart error of beta_hat is {}".format(SE_beta_coefficient))
+
+    # Calculation of t-statistics :
+
+    t_obs = np.divide(beta_coefficient, SE_beta_coefficient)
+    t_obs = t_obs.round(2)
+    print("The t-statistic is : {}".format(t_obs))
+
+    print(" ")
+
+    # Constructing the linear Regression Equation :
+
+    print("Final Result => So the predicted regression is : Yi_hat = {} + {} Xi_hat, with intercept {} and slope {}. The R-Squared values is {}. ".format(intercept,beta_coefficient,intercept,beta_coefficient,R_Squared))
+
+    print(" ")
+    
+    # Hypothesis Testing
+    
+    
+    print("Look at the t-table and determine whether or not we can reject the null hypothesis, which is H0 : beta_coefficient = 0.")
+    
+    print(" ")
+    
+    t_crit_df = eval(input("Enter the t-value with df = 2 and critical value from the table :"))
+    
+    print(" ")
+    
+    print("The t-critical value from the t-table is : {}".format(t_crit_df))
+    
+    print(" ")
+    
+    if (t_obs>0)&(t_obs>t_crit_df):
+        print("Reject the Null Hypothesis. So beta coefficient is statistically significant.")
+    elif (t_obs<0):
+        t_obs1 = -(t_obs)
+        if t_obs1>t_crit_df:
+            print("Reject the Null Hypothesis. So beta coefficient is statistically significant.")
+    else :
+        print("We fail to reject the Null Hypothesis.")
+        
+        
+    print(" ")
+    
+    print("***************************************************************************************************************************************************************************")
